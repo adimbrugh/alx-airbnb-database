@@ -3,6 +3,7 @@
 ## 🎯 Objective
 Apply normalization principles to ensure the database is in the third normal form (3NF).
 
+
 ---
 
 ## ✅ 1. What is 3NF?
