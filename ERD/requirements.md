@@ -3,121 +3,98 @@
 ## 🎯 Objective
 This document outlines the technical and structural requirements for the Entity-Relationship Diagram (ERD) of the Airbnb Database Module. It focuses on clearly representing the data model including entities, attributes, relationships, and constraints.
 
-## 1. Identify Entities and Attributes
+---
+
+## 📘 Entities and Attributes
 
 ### 🧍 User
-- `user_id` (PK, UUID, indexed)  
-- `first_name`, `last_name` (NOT NULL)  
-- `email` (UNIQUE, NOT NULL)  
-- `password_hash` (NOT NULL)  
-- `phone_number` (nullable)  
-- `role` (ENUM: guest, host, admin)  
-- `created_at` (timestamp)
+- `user_id`: Primary Key, UUID, Indexed  
+- `first_name`: VARCHAR, NOT NULL  
+- `last_name`: VARCHAR, NOT NULL  
+- `email`: VARCHAR, UNIQUE, NOT NULL  
+- `password_hash`: VARCHAR, NOT NULL  
+- `phone_number`: VARCHAR, NULL  
+- `role`: ENUM (`guest`, `host`, `admin`), NOT NULL  
+- `created_at`: TIMESTAMP, DEFAULT CURRENT_TIMESTAMP  
 
 ### 🏠 Property
-- `property_id` (PK, UUID, indexed)  
-- `host_id` (FK → User.user_id)  
-- `name`, `description`, `location` (NOT NULL)  
-- `pricepernight` (DECIMAL, NOT NULL)  
-- `created_at`, `updated_at` (timestamp)
+- `property_id`: Primary Key, UUID, Indexed  
+- `host_id`: Foreign Key → User(`user_id`)  
+- `name`: VARCHAR, NOT NULL  
+- `description`: TEXT, NOT NULL  
+- `location`: VARCHAR, NOT NULL  
+- `pricepernight`: DECIMAL, NOT NULL  
+- `created_at`: TIMESTAMP, DEFAULT CURRENT_TIMESTAMP  
+- `updated_at`: TIMESTAMP, ON UPDATE CURRENT_TIMESTAMP  
 
 ### 📅 Booking
-- `booking_id` (PK, UUID, indexed)  
-- `property_id` (FK → Property.property_id)  
-- `user_id` (FK → User.user_id)  
-- `start_date`, `end_date` (DATE, NOT NULL)  
-- `total_price` (DECIMAL)  
-- `status` (ENUM: pending, confirmed, canceled)  
-- `created_at` (timestamp)
+- `booking_id`: Primary Key, UUID, Indexed  
+- `property_id`: Foreign Key → Property(`property_id`)  
+- `user_id`: Foreign Key → User(`user_id`)  
+- `start_date`: DATE, NOT NULL  
+- `end_date`: DATE, NOT NULL  
+- `total_price`: DECIMAL, NOT NULL  
+- `status`: ENUM (`pending`, `confirmed`, `canceled`), NOT NULL  
+- `created_at`: TIMESTAMP, DEFAULT CURRENT_TIMESTAMP  
 
 ### 💳 Payment
-- `payment_id` (PK, UUID, indexed)  
-- `booking_id` (FK → Booking.booking_id)  
-- `amount` (DECIMAL)  
-- `payment_date` (timestamp)  
-- `payment_method` (ENUM: credit_card, paypal, stripe)
+- `payment_id`: Primary Key, UUID, Indexed  
+- `booking_id`: Foreign Key → Booking(`booking_id`)  
+- `amount`: DECIMAL, NOT NULL  
+- `payment_date`: TIMESTAMP, DEFAULT CURRENT_TIMESTAMP  
+- `payment_method`: ENUM (`credit_card`, `paypal`, `stripe`), NOT NULL  
 
 ### ⭐ Review
-- `review_id` (PK, UUID, indexed)  
-- `property_id` (FK → Property.property_id)  
-- `user_id` (FK → User.user_id)  
-- `rating` (1–5, INTEGER)  
-- `comment` (TEXT)  
-- `created_at` (timestamp)
+- `review_id`: Primary Key, UUID, Indexed  
+- `property_id`: Foreign Key → Property(`property_id`)  
+- `user_id`: Foreign Key → User(`user_id`)  
+- `rating`: INTEGER, CHECK: rating >= 1 AND rating <= 5, NOT NULL  
+- `comment`: TEXT, NOT NULL  
+- `created_at`: TIMESTAMP, DEFAULT CURRENT_TIMESTAMP  
 
 ### 💬 Message
-- `message_id` (PK, UUID, indexed)  
-- `sender_id` (FK → User.user_id)  
-- `recipient_id` (FK → User.user_id)  
-- `message_body` (TEXT)  
-- `sent_at` (timestamp)
+- `message_id`: Primary Key, UUID, Indexed  
+- `sender_id`: Foreign Key → User(`user_id`)  
+- `recipient_id`: Foreign Key → User(`user_id`)  
+- `message_body`: TEXT, NOT NULL  
+- `sent_at`: TIMESTAMP, DEFAULT CURRENT_TIMESTAMP  
 
 ---
 
-## 2. Define Relationships
+## 🔒 Constraints
 
-- **User → Property**: One-to-Many (One host owns many properties)  
-- **User → Booking**: One-to-Many (One guest can make many bookings)  
-- **Property → Booking**: One-to-Many (Each property can have many bookings)  
-- **Booking → Payment**: One-to-One (Each booking has one payment)  
-- **User → Review**: One-to-Many (User can leave many reviews)  
-- **Property → Review**: One-to-Many (Property can have many reviews)  
-- **User → Message**: One-to-Many in both sender and receiver direction (Messaging between users)
+### User Table
+- Unique constraint on `email`  
+- Non-null constraints on required fields  
 
----
+### Property Table
+- Foreign key constraint on `host_id`  
+- Non-null constraints on essential attributes  
 
-## ✅ Requirements
+### Booking Table
+- Foreign key constraints on `property_id` and `user_id`  
+- `status` must be one of: `pending`, `confirmed`, `canceled`  
 
-### 1. **Entities**
-The ER diagram must include the following entities with appropriate primary keys:
-- `User`
-- `Property`
-- `Booking`
-- `Payment`
-- `Review`
-- `Message`
+### Payment Table
+- Foreign key constraint on `booking_id`  
+- Ensures payment is linked to a valid booking  
 
-### 2. **Attributes**
-Each entity should have clearly labeled attributes:
-- Correct data types (e.g., UUID, VARCHAR, DECIMAL)
-- Constraints (e.g., NOT NULL, UNIQUE, ENUM, CHECK)
-- Timestamp fields where applicable (e.g., `created_at`, `updated_at`)
+### Review Table
+- `rating` must be between 1 and 5  
+- Foreign key constraints on `property_id` and `user_id`  
 
-### 3. **Primary Keys**
-- Each table must have a primary key.
-- Use UUIDs as the primary key format.
-- Primary keys should be indexed.
-
-### 4. **Foreign Keys**
-- Proper foreign key relationships must be defined between:
-  - `User` → `Property` (host_id)
-  - `User` → `Booking` (user_id)
-  - `Property` → `Booking` (property_id)
-  - `Booking` → `Payment` (booking_id)
-  - `User` → `Review` (user_id)
-  - `Property` → `Review` (property_id)
-  - `User` → `Message` (sender_id, recipient_id)
-
-### 5. **Relationships**
-- Represent One-to-Many and One-to-One relationships using appropriate notation (e.g., crow's foot, arrows).
-- Label relationships clearly.
-
-### 6. **Constraints**
-- Unique constraint on `User.email`
-- ENUM values enforced on:
-  - `User.role`: guest, host, admin
-  - `Booking.status`: pending, confirmed, canceled
-  - `Payment.payment_method`: credit_card, paypal, stripe
-- Rating CHECK constraint: between 1 and 5
-
-### 7. **Indexes**
-- Explicitly indicate indexing on:
-  - `email` in `User`
-  - `property_id` in `Booking`, `Review`
-  - `booking_id` in `Payment`
+### Message Table
+- Foreign key constraints on `sender_id` and `recipient_id`  
 
 ---
 
+## ⚙️ Indexing
+
+- **Primary Keys**: Indexed automatically  
+- **Additional Indexes**:
+  - `email` in the **User** table  
+  - `property_id` in the **Property** and **Booking** tables  
+  - `booking_id` in the **Booking** and **Payment** tables  
 
 ## 🛠 Tools
 - [Lucidchart](https://www.lucidchart.com/)
