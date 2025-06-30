@@ -29,3 +29,33 @@ Retrieve all properties and any associated reviews, including properties that ha
 Retrieve all users and all bookings, even if there’s no match between them.
 
 ---
+
+
+
+
+
+
+
+# 🧠 Subqueries in SQL – Airbnb Clone
+
+## 📂 Overview
+This directory showcases two types of SQL subqueries:
+1. **Non-Correlated Subquery** – Runs independently of the outer query.
+2. **Correlated Subquery** – References a column from the outer query row-by-row.
+
+These examples are applied in realistic scenarios based on the Airbnb Clone project’s database schema.
+
+---
+
+## 1️⃣ Non-Correlated Subquery – Properties With High Ratings
+### 🎯 Goal:
+Find all properties that have an **average review rating greater than 4.0**.
+
+---
+
+## 2️⃣ Correlated Subquery – Active Users by Booking Count
+### 🎯 Goal:
+Retrieve users who have made more than 3 bookings.
+
+---
+
