@@ -14,16 +14,14 @@ INNER JOIN users u ON b.user_id = u.user_id;
 
 -- --------------------------------------------------------
 
--- 2. LEFT JOIN: Get all properties with their reviews (if any)
+-- 2. LEFT JOIN: Get all properties with their reviews (properties without reviews are included)
 SELECT 
     p.property_id,
     p.name,
-    p.location,
-    r.review_id,
-    r.rating,
-    r.comment
+    p.location
 FROM properties p
-LEFT JOIN reviews r ON p.property_id = r.property_id;
+LEFT JOIN reviews r ON p.property_id = r.property_id
+WHERE r.review_id IS NULL;
 
 -- --------------------------------------------------------
 
