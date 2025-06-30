@@ -10,18 +10,22 @@ SELECT
     u.last_name,
     u.email
 FROM bookings b
-INNER JOIN users u ON b.user_id = u.user_id;
+INNER JOIN users u ON b.user_id = u.user_id
+ORDER BY b.created_at DESC;
 
 -- --------------------------------------------------------
 
--- 2. LEFT JOIN: Get all properties with their reviews (properties without reviews are included)
+-- 2. LEFT JOIN: Get all properties with their reviews (if any)
 SELECT 
     p.property_id,
     p.name,
-    p.location
+    p.location,
+    r.review_id,
+    r.rating,
+    r.comment
 FROM properties p
 LEFT JOIN reviews r ON p.property_id = r.property_id
-WHERE r.review_id IS NULL;
+ORDER BY p.created_at DESC;
 
 -- --------------------------------------------------------
 
@@ -35,4 +39,5 @@ SELECT
     b.start_date,
     b.status
 FROM users u
-FULL OUTER JOIN bookings b ON u.user_id = b.user_id;
+FULL OUTER JOIN bookings b ON u.user_id = b.user_id
+ORDER BY u.created_at NULLS LAST, b.created_at NULLS LAST;
