@@ -1,59 +1,65 @@
--- ========================================
--- ⚠️ BEFORE: Measure performance (no indexes)
--- ========================================
+-- ===========================================
+-- ✅ 1. Measure BEFORE Indexing (Raw Performance)
+-- ===========================================
 
+-- Bookings by user (used in JOINs and filters)
 EXPLAIN ANALYZE
 SELECT * FROM bookings
-WHERE user_id = '22222222-2222-2222-2222-222222222222'
+WHERE user_id = '11111111-1111-1111-1111-111111111111'
 ORDER BY created_at DESC;
 
+-- Properties by location (used in search)
 EXPLAIN ANALYZE
 SELECT * FROM properties
-WHERE location = 'New York'
+WHERE location = 'Dubai'
 ORDER BY created_at DESC;
 
+-- Users by email (used in login)
 EXPLAIN ANALYZE
 SELECT * FROM users
-WHERE email = 'alice@example.com';
+WHERE email = 'host@example.com';
 
--- ========================================
--- ✅ Create Indexes to Optimize Performance
--- ========================================
+-- ===========================================
+-- ⚙️ 2. Create Indexes to Optimize Queries
+-- ===========================================
 
--- Indexes on Users table
+-- Users table
 CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
 CREATE INDEX IF NOT EXISTS idx_users_user_id ON users(user_id);
 
--- Indexes on Bookings table
+-- Bookings table
 CREATE INDEX IF NOT EXISTS idx_bookings_user_id ON bookings(user_id);
 CREATE INDEX IF NOT EXISTS idx_bookings_property_id ON bookings(property_id);
 CREATE INDEX IF NOT EXISTS idx_bookings_created_at ON bookings(created_at);
 
--- Indexes on Properties table
+-- Properties table
 CREATE INDEX IF NOT EXISTS idx_properties_host_id ON properties(host_id);
 CREATE INDEX IF NOT EXISTS idx_properties_location ON properties(location);
 CREATE INDEX IF NOT EXISTS idx_properties_created_at ON properties(created_at);
 
--- Index on Reviews table
+-- Reviews table
 CREATE INDEX IF NOT EXISTS idx_reviews_property_id ON reviews(property_id);
 
--- Index on Payments table
+-- Payments table
 CREATE INDEX IF NOT EXISTS idx_payments_booking_id ON payments(booking_id);
 
--- ========================================
--- ✅ AFTER: Measure performance (with indexes)
--- ========================================
+-- ===========================================
+-- ✅ 3. Measure AFTER Indexing (Improved Performance)
+-- ===========================================
 
+-- Bookings by user
 EXPLAIN ANALYZE
 SELECT * FROM bookings
-WHERE user_id = '22222222-2222-2222-2222-222222222222'
+WHERE user_id = '11111111-1111-1111-1111-111111111111'
 ORDER BY created_at DESC;
 
+-- Properties by location
 EXPLAIN ANALYZE
 SELECT * FROM properties
-WHERE location = 'New York'
+WHERE location = 'Dubai'
 ORDER BY created_at DESC;
 
+-- Users by email
 EXPLAIN ANALYZE
 SELECT * FROM users
-WHERE email = 'alice@example.com';
+WHERE email = 'host@example.com';
