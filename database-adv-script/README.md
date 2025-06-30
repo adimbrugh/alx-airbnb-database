@@ -59,3 +59,28 @@ Retrieve users who have made more than 3 bookings.
 
 ---
 
+
+
+
+
+
+# 📊 Aggregation and Window Functions – Airbnb Clone
+
+## 📂 Overview
+This directory demonstrates how to use **SQL aggregation** and **window functions** to analyze data in the Airbnb Clone project. These tools are essential for deriving insights such as user activity and property popularity.
+
+---
+
+## 1️⃣ Aggregation – Total Bookings Per User
+
+### 🎯 Goal:
+Calculate the **total number of bookings made by each user**.
+
+---
+
+## 2️⃣ Window Function – Rank Properties by Bookings
+### 🎯 Goal:
+Assign a rank to each property based on how many bookings it has received.
+
+---
+
